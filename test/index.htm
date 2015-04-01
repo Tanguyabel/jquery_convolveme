@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>Test JQuery ConvolveMe</title>
+
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+
+  </head>
+
+  <body id="body">
+
+      <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Project name</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container">
+    
+       <div class="main-content text-muted">
+        <h1>Lorem ipsum</h1>
+        <div class="row vertical-align">
+          <div class="col-sm-6 col-md-4">
+            <p>
+              <img class="image1" src="img/leaves.jpg" width="300px" height="200px" /><br />
+              emboss on over
+            </p>
+          </div>
+          <div class="col-sm-6 col-md-4">
+            <p>
+              <img class="image2" src="img/livingroom.jpg" width="300px" height="225px" /><br />
+              sharpen can be useful after css rescale
+            </p>
+          </div>
+          <div class="col-sm-6 col-md-4">
+            <p>
+              <img class="image3" src="img/house.jpg" width="300px" height="300px" /><br />
+              double convolution (not supported yet)
+            </p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6 col-md-4">
+            <p>
+              <img class="image4" src="img/wine.jpg" width="200px" height="300px" /><br />
+              caption
+            </p>
+          </div>
+          <div class="col-sm-6 col-md-4">
+            <p>
+              <img class="image5" src="img/green.jpg" width="298px" height="300px" /><br />
+              caption
+            </p>
+          </div>
+          <div class="col-sm-6 col-md-4">
+            <p>
+              <img class="thumbnail image6" src="img/cat.jpg" width="300px" height="136px" /><br />
+              bug with Bootstrap thumbnail
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /.container -->
+    
+    <script src="jquery-1.11.2.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="jcanvas.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="bootstrap/js/ie10-viewport-bug-workaround.js"></script>
+    
+    <script src="khronos-webgl-utils.js"></script>
+    <script src="sylvester.js"></script>
+    <script src="glUtils.js"></script>
+    <script src="../src/jquery.convolveme.js"></script>
+    
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $(".image1").convolveMe({
+          kernel: $.fn.convolveMe.kernelEmboss,
+          permanent: false
+        })
+        $(".image2").convolveMe({
+          kernel: $.fn.convolveMe.kernelSharpen,
+          permanent: false
+        })
+        $(".image3").convolveMe({
+          kernel: $.fn.convolveMe.kernelSharpen,
+          permanent: true
+        }).convolveMe({
+          kernel: $.fn.convolveMe.kernelEmboss,
+          permanent: true
+        })
+        $(".image4").convolveMe({
+          kernel: $.fn.convolveMe.kernelSharpen,
+          permanent: false
+        })
+        $(".image5").convolveMe({
+          kernel: $.fn.convolveMe.kernelSharpen,
+          permanent: false
+        })
+        $(".image6").convolveMe();
+      });
+    </script>
+  </body>
+</html>
