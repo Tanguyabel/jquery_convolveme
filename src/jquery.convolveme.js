@@ -63,11 +63,24 @@
     [0, 1, 2]
   ]
   
+  // Different ways to handle the border
+  // Indeed, the ocnvolution cannot properly process the border of the image
+  // since some neighbors for a pixel are outside of the image
+  $.fn.convolveMe.Border = {
+    CROP:   0,  // crop the image so the border is not processed
+    KEEP:   1,  // keep the border from the original image
+    EXTEND: 2,  // extend the last processable pixels to the border
+    WRAP:   3,  // take the opposite border as the border
+    ADD:    4   // append some arbitrary pixels defined by the option borderColor
+  };
+  
+  
   // Defaults options for the plugin
   $.fn.convolveMe.defaultOptions = {
     kernel: $.fn.convolveMe.kernelSimple, // the kernel to use for convolution
     permanent: true,                      // transformed always if true, on mouse over if false
-    // todo: edge handling
+    border: $.fn.convolveMe.Border.CROP,  // crop | keep | extend | wrap | add
+    borderColor: {r: 0, g: 0, b: 0},      // border color when using boder: add
   };
   
   // Init the kernel from the matrix set as an option
@@ -118,14 +131,31 @@
     e.convolvedImageData = e.context.createImageData(e.width, e.height);
     
     // run convolution using the defined kernel <<
-    for (var i = e.kernel.radius; i < e.height - e.kernel.radius; ++i) {
-      for (var j = e.kernel.radius; j < e.width - e.kernel.radius; ++j) {
+    for (var i = 0; i < e.height; ++i) {
+      for (var j = 0; j < e.width; ++j) {
 
-        // apply kernel to current pixel <<
         var currentColor = [0, 0, 0, 0]; // rgba color
+      
+        if (i < e.kernel.radius || i >= e.height - e.kernel.radius ||
+        j < e.kernel.radius || j >= e.width - e.kernel.radius) {
+          // we are inside the border
+        
+          if (e.options.border == $.fn.convolveMe.Border.CROP) {
+            continue;
+          } else if (e.options.border == $.fn.convolveMe.Border.KEEP) {
+            // store original pixel without alteration
+            e.convolvedImageData.data[4 * (i * e.width + j) + 0] = data[4 * (i * e.width + j) + 0];
+            e.convolvedImageData.data[4 * (i * e.width + j) + 1] = data[4 * (i * e.width + j) + 1];
+            e.convolvedImageData.data[4 * (i * e.width + j) + 2] = data[4 * (i * e.width + j) + 2];
+            e.convolvedImageData.data[4 * (i * e.width + j) + 3] = data[4 * (i * e.width + j) + 3];
+            continue;
+          }
+        }
+      
+        // apply kernel to current pixel <<
+        
           for (k = -e.kernel.radius; k <= e.kernel.radius; ++k) {
-            for (l = -e.kernel.radius; l <= e.kernel.radius; ++l) {
-              
+            for (l = -e.kernel.radius; l <= e.kernel.radius; ++l) { 
               // index of the current pixel
               var currentIndex = 4 * ((i+k) * e.width + (j+l));
               currentColor[0] += data[currentIndex + 0] * e.kernel[k + e.kernel.radius][l + e.kernel.radius];
